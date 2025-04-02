@@ -27,13 +27,20 @@ const Signup = () => {
       return;
     }
 
+    if (!termsAccepted) {
+      setError("You must accept the terms and conditions");
+      return;
+    }
+
     try {
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
-
+      
+      // Create user with Firebase authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Store user details in Firestore database
       await setDoc(doc(db, "Users", user.uid), {
         email: user.email,
         userName: username,
@@ -41,8 +48,12 @@ const Signup = () => {
       });
 
       console.log("User Registered Successfully:", user);
-      toast.success("User Registered Successfully!!", { position: "top-center" });
+      toast.success("User Registered Successfully!", { 
+        position: "top-center",
+        autoClose: 3000
+      });
 
+      // Navigate to login page after 3 seconds
       setTimeout(() => {
         navigate("/login");
       }, 3000);
@@ -134,6 +145,7 @@ const Signup = () => {
                 checked={termsAccepted}
                 onChange={() => setTermsAccepted(!termsAccepted)}
                 className="h-5 w-5"
+                required
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
                 I accept the <a href="#" className="text-teal-500 hover:underline">terms and conditions</a>.
@@ -153,8 +165,8 @@ const Signup = () => {
           </form>
 
           <div className="mt-4 text-center">
-            <p>
-              Already have an account? <a href="/login" className="text-black-5600 hover:underline">Click here to login</a>.
+            <p className="text-gray-700">
+              Already have an account? <a href="/login" className="text-black-600 hover:underline font-medium">Login here</a>.
             </p>
           </div>
         </div>

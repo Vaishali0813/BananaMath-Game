@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import bgImage from "../../assets/menu1.jpg";
 import Navbar from "../../components/Navbar.jsx";
 
+
+// State variables for managing user input
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,7 @@ const Login = () => {
       // Sign in with email and password
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("User logged in successfully!", { position: "top-center" });
-      navigate("/game-menu"); // Redirect to game-menu after successful login
+      navigate("/game-menu"); 
     } catch (error) {
       toast.error("Login Failed: " + error.message, { position: "top-center" });
     }
