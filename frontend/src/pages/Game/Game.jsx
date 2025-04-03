@@ -82,14 +82,12 @@ const Game = () => {
   };
 
   const saveScoreAndNavigate = () => {
-    // Save score to localStorage (or Firestore if using Firebase)
     const allScores = JSON.parse(localStorage.getItem("scores")) || {};
     const userScores = allScores[userName] || [];
     const updatedScores = [{ score, level, timestamp: new Date().toISOString() }, ...userScores].slice(0, 3);
     allScores[userName] = updatedScores;
     localStorage.setItem("scores", JSON.stringify(allScores));
 
-    // Navigate to the score page
     navigate(`/score?name=${userName}&score=${score}&level=${level}`);
   };
 
@@ -128,7 +126,7 @@ const Game = () => {
                 </button>
                 <button
                   onClick={handleAnswerSubmit}
-                  className="text-white py-2 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-md"
+                  className="text-black py-2 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-md"
                   style={{ backgroundColor: '#b5a669' }}
                 >
                   Submit Answer
@@ -138,6 +136,15 @@ const Game = () => {
           ) : (
             <p className="text-xl text-gray-500">Loading question...</p>
           )}
+          
+          {/* Back Button */}
+          <button
+            onClick={() => navigate("/game-menu")}
+            className="text-white py-2 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-md"
+            style={{ backgroundColor: '#b5a669' }}
+          >
+            Back to Menu
+          </button>
         </div>
       </div>
     </div>

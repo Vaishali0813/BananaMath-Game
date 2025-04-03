@@ -5,16 +5,27 @@ import GameMenuImage from "../../assets/menu1.jpg";
 
 const GameMenu = () => {
   const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("user"); // Check if user is logged in
+
+  const handleNewGameClick = () => {
+    if (isLoggedIn) {
+      navigate("/level");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div
       className="min-h-screen flex flex-col bg-no-repeat"
-      style={{
-        backgroundImage: `url(${GameMenuImage})`,
-        backgroundSize: "100%", 
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat", 
-      }}
+      style={
+        {
+          backgroundImage: `url(${GameMenuImage})`,
+          backgroundSize: "100%", 
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat", 
+        }
+      }
     >
       <Navbar />
 
