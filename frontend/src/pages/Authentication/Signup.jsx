@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar.jsx"; 
-import bgImage from "../../assets/menu1.jpg"; 
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../components/firebase.js";
-import { setDoc, doc } from "firebase/firestore";
+import Navbar from "../../components/Navbar.jsx";
+import handImage from "../../assets/hand.webp";
 import { toast } from "react-toastify";
-import bcrypt from "bcryptjs"; 
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -33,52 +29,52 @@ const Signup = () => {
     }
 
     try {
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, salt);
-      
-      // Create user with Firebase authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Store user details in Firestore database
-      await setDoc(doc(db, "Users", user.uid), {
-        email: user.email,
-        userName: username,
-        password: hashedPassword,
+      const response = await fetch("http://localhost:4000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          userName: username, // ✅ Backend expects this as `userName`
+          password,
+        }),
       });
 
-      console.log("User Registered Successfully:", user);
-      toast.success("User Registered Successfully!", { 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+
+      toast.success("User Registered Successfully!", {
         position: "top-center",
-        autoClose: 3000
+        autoClose: 3000,
       });
 
-      // Navigate to login page after 3 seconds
       setTimeout(() => {
         navigate("/login");
       }, 3000);
     } catch (error) {
       setError(error.message);
-      console.error("Registration Error:", error.message);
       toast.error(error.message, { position: "bottom-center" });
     }
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <div className="min-h-screen flex justify-center items-start pt-12 px-10">
-        <div className="p-10 rounded-lg shadow-2xl w-full sm:w-96 bg-opacity-0 backdrop-blur-md" style={{ width: '600px', height: 'auto' }}>
-          <h2 className="text-4xl font-extrabold text-center text-black-400 mb-8 drop-shadow-lg">
-            Register
-          </h2>
+      <div className="flex min-h-screen items-center justify-center">
+        {/* Left: Registration Form */}
+        <div className="w-full md:w-1/2 flex justify-center items-center p-6">
+          <div className="bg-gray-100 p-10 rounded-xl shadow-md w-full max-w-md">
+            <h2 className="text-3xl font-bold text-center mb-6">Register</h2>
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
+            {error && <p className="text-red-500 text-center">{error}</p>}
 
-          <form onSubmit={handleRegister} className="space-y-6">
-            <div className="flex flex-col space-y-4">
+            <form onSubmit={handleRegister} className="space-y-6">
               <div>
-                <label htmlFor="username" className="block text-lg font-medium text-gray-700">
+                <label htmlFor="username" className="block text-gray-700 font-medium mb-1">
                   Username
                 </label>
                 <input
@@ -86,14 +82,14 @@ const Signup = () => {
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full mt-2 px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Enter your username"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+                <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
                   Email
                 </label>
                 <input
@@ -101,14 +97,14 @@ const Signup = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full mt-2 px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Enter your email"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-lg font-medium text-gray-700">
+                <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
                   Password
                 </label>
                 <input
@@ -116,14 +112,14 @@ const Signup = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full mt-2 px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Enter your password"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700">
+                <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -131,44 +127,47 @@ const Signup = () => {
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full mt-2 px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Confirm your password"
                   required
                 />
               </div>
-            </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="terms"
-                checked={termsAccepted}
-                onChange={() => setTermsAccepted(!termsAccepted)}
-                className="h-5 w-5"
-                required
-              />
-              <label htmlFor="terms" className="text-sm text-gray-700">
-                I accept the <a href="#" className="text-teal-500 hover:underline">terms and conditions</a>.
-              </label>
-            </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={termsAccepted}
+                  onChange={() => setTermsAccepted(!termsAccepted)}
+                  className="h-4 w-4"
+                />
+                <label htmlFor="terms" className="text-sm text-gray-700">
+                  I accept the <a href="#" className="text-teal-500 hover:underline">terms and conditions</a>.
+                </label>
+              </div>
 
-            <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-40 text-black py-3 rounded-lg text-xl font-semibold hover:opacity-90 transition duration-300 hover:scale-105 shadow-lg"
-                style={{ backgroundColor: '#b5a669' }}
+                className="w-full bg-orange-400 hover:bg-orange-500 text-white py-2 rounded-lg font-semibold transition duration-300"
                 disabled={!termsAccepted}
               >
                 Register
               </button>
-            </div>
-          </form>
 
-          <div className="mt-4 text-center">
-            <p className="text-gray-700">
-              Already have an account? <a href="/login" className="text-black-600 hover:underline font-medium">Login here</a>.
-            </p>
+              <div className="text-sm text-center mt-4">
+                Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login here</a>
+              </div>
+            </form>
           </div>
+        </div>
+
+        {/* Right: Image */}
+        <div className="hidden md:block md:w-1/2 h-full">
+          <img
+            src={handImage}
+            alt="Helping hands"
+            className="h-full w-full object-cover"
+          />
         </div>
       </div>
     </div>

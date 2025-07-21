@@ -1,66 +1,65 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
-import Navbar from "../components/Navbar.jsx"; 
-import bgImage from "../assets/menu1.jpg"; 
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import bgImage from "../assets/image.jpg";
 
 const Instructions = () => {
-  const navigate = useNavigate(); // ✅ Initialize navigation
+  const navigate = useNavigate();
 
   const handleStartGame = () => {
-    navigate("/game-menu"); // ✅ Navigate to the game menu
+    navigate("/login"); 
   };
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: `url(${bgImage})` }} 
-    >
-      <Navbar />
+    <div className="relative min-h-screen">
+      {/* Background Image with reduced opacity */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-15 z-0"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      ></div>
 
-      <div className="max-w-4xl mx-auto py-12 px-6 sm:px-8 mt-10">
-        <div className="bg-fixed bg-opacity-70 rounded-lg shadow-xl p-8">
-          <h2 className="text-3xl font-bold text-center text-black-700 mb-6">
-            Game Instructions
-          </h2>
-          <p className="text-lg text-gray-700 mb-4">
-            Welcome to the Banana Math! The objective is to complete all the equations by filling in the missing numbers or operators. Here’s how to play:
-          </p>
+      {/* Overlay Content */}
+      <div className="relative z-10">
+        <Navbar />
 
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <div className="mr-4 text-2xl font-semibold text-#b5a669-600">1.</div>
-              <p className="text-lg text-gray-700">
-                The game board consists of mathematical equations with missing numbers or operators. Your task is to identify the missing elements by looking at the numbers and symbols.
-              </p>
-            </div>
-            <div className="flex items-start">
-              <div className="mr-4 text-2xl font-semibold text-#b5a669-600">2.</div>
-              <p className="text-lg text-gray-700">
-                There will be a number pad with digits and symbols for you to choose from. Click or tap on a number or symbol to select it.
-              </p>
-            </div>
-            <div className="flex items-start">
-              <div className="mr-4 text-2xl font-semibold text-#b5a669-600">3.</div>
-              <p className="text-lg text-gray-700">
-                Place the correct number or symbol in the empty space of the equation.
-              </p>
-            </div>
-            <div className="flex items-start">
-              <div className="mr-4 text-2xl font-semibold text-#b5a669-600">4.</div>
-              <p className="text-lg text-gray-700">
-                Once all the equations are correctly completed, you win the game and can move on to the next puzzle.
-              </p>
-            </div>
-          </div>
+        {/* Content container with padding */}
+        <div className="max-w-4xl mx-auto px-6 pt-28 pb-10">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">
+            We are here to help you find the right welfare support..
+          </h1>
 
-          <div className="mt-8 text-center">
-            <button 
-              className="bg-#b5a669-500 text-white px-6 py-2 rounded-lg font-semibold hover:scale-105"
-              style={{ backgroundColor: '#b5a669' }} 
-              onClick={handleStartGame} // ✅ Call the navigation function on button click
-            >
-              Start Game
-            </button>
+          <div className="space-y-6 text-lg text-gray-700 bg-white bg-opacity-80 p-6 rounded-lg shadow-lg">
+            <p>
+              This website helps Sri Lankan citizens easily check their eligibility
+              for government welfare programs by entering basic personal details.
+              It quickly matches users with suitable benefits based on their
+              individual situation.
+            </p>
+            <p>
+              The website not only shows eligibility results but also provides clear
+              instructions on required documents and how to apply through channels
+              like the Grama Niladhari. It supports local languages, works on any
+              device, and helps users access welfare benefits easily and
+              confidently.
+            </p>
+            <p>
+              It ensures privacy and data security by safely handling personal
+              information, giving users peace of mind while using the service.
+            </p>
+            <p>
+              The platform is regularly updated to reflect the latest welfare
+              policies, ensuring users always get accurate and up-to-date guidance.
+            </p>
+
+            {/* Centered Button with orange color */}
+            <div className="pt-4 flex justify-center">
+              <button
+                onClick={handleStartGame}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
+              >
+                Check My Eligibility
+              </button>
+            </div>
           </div>
         </div>
       </div>
